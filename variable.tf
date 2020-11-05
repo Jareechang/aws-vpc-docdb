@@ -3,3 +3,7 @@ variable "aws_region" {
 }
 
 variable "local_ip_address" {}
+
+variable "docdb_cluster_identifer" {
+    default = "dev"
+}
