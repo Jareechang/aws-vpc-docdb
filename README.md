@@ -38,7 +38,8 @@ setup a DocumentDB within the vpc and use lambda to load and manage csv file dat
 - Terraform (>= v0.12.24)
 
 
-**Setting up resources:**
+**Setting up resources: (TODO)**
+
 
 
 1. Add AWS secret and key to your environment (or use template below and fill in envs)

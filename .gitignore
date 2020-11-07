@@ -7,3 +7,4 @@ terraform.tfstate.backup
 .terraform
 *.pem
 db-create-instructions.md
+node_modules

@@ -155,6 +155,28 @@ resource "aws_security_group" "bastion" {
   }
 }
 
+resource "aws_default_security_group" "custom_default" {
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+      protocol  = -1
+      self      = true
+      from_port = 0
+      to_port   = 0
+  }
+
+  egress {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+      Name = "web-custom-default"
+  }
+}
+
 
 ## Security Group - default private (The default SG for private resources)
 resource "aws_security_group" "private_default" {
@@ -194,9 +216,7 @@ resource "aws_security_group" "private_db_docdb" {
       from_port   = 27017
       to_port     = 27017
       protocol    = "tcp"
-      security_groups = [
-          "${aws_security_group.bastion.id}"
-      ]
+      cidr_blocks = ["10.0.0.0/16"]
   }
 
   egress {
@@ -320,7 +340,7 @@ resource "random_password" "docdb_password" {
 
 resource "aws_docdb_cluster" "default" {
     cluster_identifier      = var.docdb_cluster_identifer 
-    master_username         = "dev_user"
+    master_username         = var.docdb_cluster_username
     master_password         = random_password.docdb_password.result
     backup_retention_period = 1
     preferred_backup_window = "07:00-09:00"
@@ -342,4 +362,3 @@ resource "aws_docdb_cluster_instance" "cluster_instances" {
     cluster_identifier = aws_docdb_cluster.default.id
     instance_class     = "db.t3.medium"
 }
-
