@@ -7,7 +7,7 @@ const {exec} = require('child_process');
  * **/
 async function runProductionInstall() {
     return new Promise((resolve, reject) => {
-        exec('yarn run install --frozen-lockfile --production', (err, stdout, stderr) => {
+        exec('yarn install --frozen-lockfile --production', (err, stdout, stderr) => {
             if (err) return reject(stderr);
             return resolve(stdout);
         });
