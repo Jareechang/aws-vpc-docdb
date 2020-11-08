@@ -11,6 +11,7 @@ const databaseName = 'test';
 const collectionName = 'info';
 
 exports.handler = async function(event, context) {
+    const client = new MongoDBWrapper();
     //Create a MongoDB client, open a connection to Amazon DocumentDB as a replica set, 
     //  and specify the read preference as secondary preferred
     var client = await MongoClient.connect(

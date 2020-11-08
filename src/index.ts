@@ -2,6 +2,7 @@ import mongodb from 'mongodb';
 import {DocumentDBWrapper} from './docdb';
 
 async function run() {
+    console.log(mongodb);
     const operation : string = process.env.DB_OPERATION || '';
     const connectionOptions : any = null;
     const documentDBWrapper : any = new DocumentDBWrapper(
