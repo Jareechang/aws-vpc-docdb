@@ -12,7 +12,7 @@ async function generateLambdaS3ZipFile() {
     const fileName = `deploy/main-${packageJson.version}.zip`;
     console.log('Creating new zip file...');
     return new Promise((resolve, reject) => {
-        exec(`zip ${fileName} dist/ node_modules`, (err, stdout, stderr) => {
+        exec(`zip ${fileName} ../dist/ ../node_modules`, (err, stdout, stderr) => {
             if (err) return reject(stderr);
             if (stdout) {
                 console.log(`File created. name: ${fileName}`);
