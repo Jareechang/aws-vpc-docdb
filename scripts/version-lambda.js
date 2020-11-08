@@ -13,7 +13,7 @@ async function generateLambdaS3ZipFile() {
     console.log('Creating new zip file...');
     return new Promise((resolve, reject) => {
         exec(`zip ${fileName} ../dist/ ../node_modules`, (err, stdout, stderr) => {
-            if (err) return reject(stderr);
+            if (err) return reject(err);
             if (stdout) {
                 console.log(`File created. name: ${fileName}`);
                 return resolve(stdout);
