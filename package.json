@@ -9,7 +9,7 @@
   "scripts": {
     "ts-check": "tsc --noEmit",
     "build": "yarn run ts-check && rollup -c",
-    "clean": "cross-env-shell \"rm -rf dist\"",
+    "clean": "cross-env-shell \"rm -rf dist && rm -rf deploy\"",
     "postversion": "node ./scripts/version-lambda.js",
     "version:patch": "npm version patch",
     "version:minor": "npm version minor",
