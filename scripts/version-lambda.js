@@ -30,7 +30,7 @@ async function main() {
     await common.runBuild();
 
     // Create new dist folder
-    await fs.mkdir('dist');
+    await fs.mkdir('deploy');
 
     // Generate 
     await generateLambdaS3ZipFile();
