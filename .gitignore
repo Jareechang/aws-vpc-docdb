@@ -9,3 +9,4 @@ terraform.tfstate.backup
 db-create-instructions.md
 node_modules
 *.log
+deploy

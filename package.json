@@ -8,11 +8,17 @@
   },
   "scripts": {
     "ts-check": "tsc --noEmit",
-    "build": "yarn run ts-check && rollup -c"
+    "build": "yarn run ts-check && rollup -c",
+    "clean": "cross-env-shell \"rm -rf dist\"",
+    "postversion": "node ./scripts/version-lambda.js",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major"
   },
   "devDependencies": {
     "@common-web/rollup": "^1.0.15",
     "@common-web/ts-config": "^1.0.1",
-    "@types/mongodb": "^3.5.33"
+    "@types/mongodb": "^3.5.33",
+    "cross-env": "^7.0.2"
   }
 }
