@@ -23,17 +23,23 @@ async function generateLambdaS3ZipFile() {
 }
 
 async function main() {
-    // Clean folders / files
-    await common.runClean();
+    try {
 
-    // Run build 
-    await common.runBuild();
+        // Clean folders / files
+        await common.runClean();
 
-    // Create new dist folder
-    await fs.mkdir('deploy');
+        // Run build 
+        await common.runBuild();
 
-    // Generate 
-    await generateLambdaS3ZipFile();
+        // Create new dist folder
+        await fs.mkdir('deploy');
+
+        // Generate 
+        await generateLambdaS3ZipFile();
+    } catch (ex) {
+        console.log(
+            'version-lambda > main() failed. error:  ', ex);
+    }
 }
 
 main();
