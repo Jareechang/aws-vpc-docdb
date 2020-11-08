@@ -30,6 +30,9 @@ async function main() {
         // Run build 
         await common.runBuild();
 
+        // Run production install, trim dev / build deps 
+        await common.runProductionInstall();
+
         // Create new dist folder
         await fs.mkdir('deploy');
 

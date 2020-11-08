@@ -2,6 +2,20 @@ const {exec} = require('child_process');
 
 /*
  * 
+ * Runs the build to create new dist scripts
+ *
+ * **/
+async function runProductionInstall() {
+    return new Promise((resolve, reject) => {
+        exec('yarn run install --frozen-lockfile --production', (err, stdout, stderr) => {
+            if (err) return reject(stderr);
+            return resolve(stdout);
+        });
+    });
+}
+/*
+ *
+ * 
  * Cleans the dist folder 
  *
  * **/
@@ -31,5 +45,6 @@ async function runBuild() {
 
 module.exports = {
     runClean,
-    runBuild
+    runBuild,
+    runProductionInstall
 };
