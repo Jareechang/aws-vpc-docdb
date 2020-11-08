@@ -11,11 +11,8 @@ const common = require('./common');
 async function generateLambdaS3ZipFile() {
     const fileName = `deploy/main-${packageJson.version}.zip`;
     console.log('Creating new zip file...');
-    const opts = {
-        maxBuffer: 1024 * 500
-    };
     return new Promise((resolve, reject) => {
-        exec(`zip -r ${fileName} dist/ node_modules/`, opts, (err, stdout, stderr) => {
+        exec(`zip -r -q ${fileName} dist/ node_modules/`, (err, stdout, stderr) => {
             if (err) return reject(err);
             if (stdout) {
                 console.log(`File created. name: ${fileName}`);
@@ -27,7 +24,6 @@ async function generateLambdaS3ZipFile() {
 
 async function main() {
     try {
-
         // Clean folders / files
         await common.runClean();
 
