@@ -156,4 +156,32 @@ terraform destroy -auto-approve
 
 ## Notes
 
-TBA
+#### Lambda Asset file size optimization 
+
+It is recommended to trim dev / build dependencies and only deploy runtime dependencies for production.
+
+This keeps the final asset lean and keep out the bloat with unncessary dependencies. 
+
+**Using yarn, this can be achieved via:**
+
+```sh
+yarn install --froze-lockfile --production
+```
+
+##### Benchmark 
+
+**Before:**
+
+```sh
+du -sh ./deploy/main-1.0.0.zip
+
+18M	./deploy/main-1.0.0.zip
+```
+
+**After:**
+
+```sh
+du -sh ./deploy/main-1.0.0.zip
+
+764K ./deploy/main-1.0.0.zip
+```
