@@ -1,0 +1,18 @@
+{
+  "name": "vpc-docdb-lambdas",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.6.3"
+  },
+  "scripts": {
+    "ts-check": "tsc --noEmit",
+    "build": "yarn run ts-check && rollup -c"
+  },
+  "devDependencies": {
+    "@common-web/rollup": "^1.0.15",
+    "@common-web/ts-config": "^1.0.1",
+    "@types/mongodb": "^3.5.33"
+  }
+}
