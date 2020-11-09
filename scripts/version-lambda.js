@@ -24,8 +24,6 @@ async function generateLambdaS3ZipFile() {
 
 async function main() {
     try {
-        // Run dev install 
-        await common.runDevInstall();
 
         // Clean folders / files
         await common.runClean();
@@ -33,17 +31,16 @@ async function main() {
         // Run build 
         await common.runBuild();
 
-        // Run production install, trim dev / build deps 
-        await common.runProductionInstall();
+        if (process.env.CI) {
+            // Run production install, trim dev / build deps 
+            await common.runProductionInstall();
+        }
 
         // Create new dist folder
         await fs.mkdir('deploy');
 
         // Generate 
         await generateLambdaS3ZipFile();
-
-        // Run dev install 
-        await common.runDevInstall();
     } catch (ex) {
         console.log(
             'version-lambda > main() failed. error:  ', ex);
