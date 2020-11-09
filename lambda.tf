@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "lambda_bucket" {
-    bucket  = "jerry-lambda-test1111"
+    bucket  = "dev-lambda-test-01234"
     acl     = "private"
 
     tags = {
@@ -9,8 +9,8 @@ resource "aws_s3_bucket" "lambda_bucket" {
 }
 
 locals {
-    package_json = jsondecode(file("./src/package.json"))
-    build_folder = "dist"
+    package_json = jsondecode(file("./package.json"))
+    build_folder = "deploy"
 }
 
 resource "aws_s3_bucket_object" "lambda_docdb_test" {
@@ -43,11 +43,11 @@ resource "aws_lambda_function" "docdb_lambda" {
     function_name = var.lambda_func_name
     s3_bucket = "${aws_s3_bucket.lambda_bucket.id}"
     s3_key = "${aws_s3_bucket_object.lambda_docdb_test.id}"
-    handler = "src/docdb/read/index.handler"
+    handler = "dist/index.handler"
     role = "${aws_iam_role.iam_for_lambda.arn}"
     timeout = 300
 
-    source_code_hash = "${filebase64sha256("dist/main-${local.package_json.version}.zip")}"
+    source_code_hash = "${filebase64sha256("deploy/main-${local.package_json.version}.zip")}"
 
     runtime = "nodejs12.x"
     depends_on = [
@@ -65,8 +65,10 @@ resource "aws_lambda_function" "docdb_lambda" {
 
     environment {
         variables = {
-            db_user     = var.docdb_cluster_username
-            db_password = random_password.docdb_password.result
+            DB_ENDPOINT     = aws_docdb_cluster.default.endpoint
+            DB_USER         = var.docdb_cluster_username
+            DB_PASSWORD     = random_password.docdb_password.result
+            DB_OPERATION    = "read" 
         }
     }
 }

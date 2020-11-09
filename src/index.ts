@@ -1,8 +1,17 @@
 import mongodb from 'mongodb';
+import f from 'util';
+import * as fs from 'fs';
 import {DocumentDBWrapper} from './docdb';
 
-async function run() {
-    console.log(mongodb);
+//Specify the Amazon DocumentDB cert
+const ca = [
+    fs.readFileSync(path.resolve(__dirname, "rds-combined-ca-bundle.pem"))
+];
+
+const databaseName = 'test';
+const collectionName = 'info';
+
+exports.handler = async function(event, context) {
     const operation : string = process.env.DB_OPERATION || '';
     const connectionOptions : any = null;
     const documentDBWrapper : any = new DocumentDBWrapper(
@@ -20,6 +29,26 @@ async function run() {
                 `No Operation provided, please set process.env.DB_OPERATION.`
             );
     }
-}
+    //Create a MongoDB client, open a connection to Amazon DocumentDB as a replica set, 
+    //  and specify the read preference as secondary preferred
+    var client = await monogdb.MongoClient.connect(
+`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ENDPOINt}:27017/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
+        { 
+            sslValidate: true,
+            sslCA:ca,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }).catch(err => console.log(err));
 
-run();
+    try { 
+
+        //Specify the database to be used
+        let db = client.db(databaseName);
+
+        //Specify the collection to be used
+        const results = await db.collection(collectionName).find({}).toArray();
+        console.log('result: ', results);
+    } catch (ex) {
+        console.error('DB execution failed: ', ex);
+    }
+}

@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 provider "random" {
-    version = "~> 2.2.0"
+    version = "~> v2.2.0"
 }
 
 
@@ -334,8 +334,7 @@ resource "aws_docdb_subnet_group" "default" {
 
 resource "random_password" "docdb_password" {
     length = 16
-    special = true
-    override_special = "_%@"
+    special = false 
 }
 
 resource "aws_docdb_cluster" "default" {
