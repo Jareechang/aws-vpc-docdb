@@ -1,6 +1,7 @@
 import mongodb from 'mongodb';
-import f from 'util';
+//import f from 'util';
 import * as fs from 'fs';
+import path from 'path';
 import {DocumentDBWrapper} from './docdb';
 
 //Specify the Amazon DocumentDB cert
@@ -11,7 +12,7 @@ const ca = [
 const databaseName = 'test';
 const collectionName = 'info';
 
-exports.handler = async function(event, context) {
+exports.handler = async function(event: any, context: any) {
     const operation : string = process.env.DB_OPERATION || '';
     const connectionOptions : any = null;
     const documentDBWrapper : any = new DocumentDBWrapper(
@@ -31,14 +32,14 @@ exports.handler = async function(event, context) {
     }
     //Create a MongoDB client, open a connection to Amazon DocumentDB as a replica set, 
     //  and specify the read preference as secondary preferred
-    var client = await monogdb.MongoClient.connect(
+    var client : any = await mongodb.MongoClient.connect(
 `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ENDPOINt}:27017/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
         { 
             sslValidate: true,
             sslCA:ca,
             useNewUrlParser: true,
             useUnifiedTopology: true
-        }).catch(err => console.log(err));
+        }).catch((err: any) => console.log(err));
 
     try { 
 
