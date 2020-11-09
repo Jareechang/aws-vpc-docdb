@@ -24,11 +24,11 @@ async function generateLambdaS3ZipFile() {
 
 async function main() {
     try {
-        // Clean folders / files
-        await common.runClean();
-
         // Run dev install 
         await common.runDevInstall();
+
+        // Clean folders / files
+        await common.runClean();
 
         // Run build 
         await common.runBuild();
