@@ -33,7 +33,7 @@ exports.handler = async function(event: any, context: any) {
     //Create a MongoDB client, open a connection to Amazon DocumentDB as a replica set, 
     //  and specify the read preference as secondary preferred
     var client : any = await mongodb.MongoClient.connect(
-`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ENDPOINt}:27017/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
+`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ENDPOINT}:27017/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
         { 
             sslValidate: true,
             sslCA:ca,
