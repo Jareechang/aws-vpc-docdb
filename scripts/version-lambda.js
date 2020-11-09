@@ -27,6 +27,9 @@ async function main() {
         // Clean folders / files
         await common.runClean();
 
+        // Run dev install 
+        await common.runDevInstall();
+
         // Run build 
         await common.runBuild();
 
@@ -38,6 +41,9 @@ async function main() {
 
         // Generate 
         await generateLambdaS3ZipFile();
+
+        // Run dev install 
+        await common.runDevInstall();
     } catch (ex) {
         console.log(
             'version-lambda > main() failed. error:  ', ex);
