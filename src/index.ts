@@ -16,11 +16,29 @@ exports.handler = async function(event: any, context: any) {
     const operation : string = process.env.DB_OPERATION || '';
     const connectionOptions : any = null;
     const documentDBWrapper : any = new DocumentDBWrapper(
-        connectionOptions
+        databaseName
     );
+
+    try {
+        await documentDBWrapper.connect({
+            ca,
+            port: '27017',
+            endpoint: process.env.DB_ENDPOINT,
+            username: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+        });
+    } catch (ex) {
+        console.error(
+            'Failed to connect documentDB, error: ',
+            ex.message
+        );
+        throw ex;
+    }
+
+    let results = null;
     switch (operation) {
         case 'read':
-            await documentDBWrapper.read();
+            await documentDBWrapper.read({});
             break;
         case 'write':
             await documentDBWrapper.write();
@@ -30,26 +48,5 @@ exports.handler = async function(event: any, context: any) {
                 `No Operation provided, please set process.env.DB_OPERATION.`
             );
     }
-    //Create a MongoDB client, open a connection to Amazon DocumentDB as a replica set, 
-    //  and specify the read preference as secondary preferred
-    var client : any = await mongodb.MongoClient.connect(
-`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ENDPOINT}:27017/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
-        { 
-            sslValidate: true,
-            sslCA:ca,
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }).catch((err: any) => console.log(err));
-
-    try { 
-
-        //Specify the database to be used
-        let db = client.db(databaseName);
-
-        //Specify the collection to be used
-        const results = await db.collection(collectionName).find({}).toArray();
-        console.log('result: ', results);
-    } catch (ex) {
-        console.error('DB execution failed: ', ex);
-    }
+    console.log('Results: ', results);
 }
