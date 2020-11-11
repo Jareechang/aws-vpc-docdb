@@ -80,7 +80,6 @@ class DocumentDBWrapper {
             );
         }
         console.log('write DB....');
-
         return response;
     }
 }
