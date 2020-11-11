@@ -72,9 +72,10 @@ class DocumentDBWrapper {
     }
 
     public async insertOne(
+        collection: any,
         data: any,
     ): Promise<boolean> {
-        let response = false
+        let results = false
         if (!this.client) {
             throw new Error(
                 'this.client does not exist, please call connect() with the correct option'

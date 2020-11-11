@@ -39,12 +39,15 @@ exports.handler = async function(event: any, context: any) {
             results = await documentDBWrapper.read(collectionName, {});
             break;
         case 'insert':
-            const currentData = new Date();
-            results = await documentDBWrapper.insert({
-                data: {
-                    currentDate
+            const currentDate = new Date();
+            results = await documentDBWrapper.insert(
+                collectionName,
+                {
+                    data: {
+                        currentDate
+                    }
                 }
-            });
+            );
             break;
         default:
             console.log(
