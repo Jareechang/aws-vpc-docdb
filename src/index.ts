@@ -1,4 +1,3 @@
-import mongodb from 'mongodb';
 //import f from 'util';
 import * as fs from 'fs';
 import path from 'path';
@@ -14,7 +13,6 @@ const collectionName = 'info';
 
 exports.handler = async function(event: any, context: any) {
     const operation : string = process.env.DB_OPERATION || '';
-    const connectionOptions : any = null;
     const documentDBWrapper : any = new DocumentDBWrapper(
         databaseName
     );
@@ -38,7 +36,7 @@ exports.handler = async function(event: any, context: any) {
     let results = null;
     switch (operation) {
         case 'read':
-            await documentDBWrapper.read({});
+            await documentDBWrapper.read(collectionName, {});
             break;
         case 'write':
             await documentDBWrapper.write();

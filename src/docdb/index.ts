@@ -19,17 +19,15 @@ interface DBConnectionOptions {
 }
 
 class DocumentDBWrapper {
-    private connectionOptions : DBConnectionOptions = null;
     private client : any = null;
     private databaseName : string = '';
-    private collectionName : string = '';
 
     constructor(databaseName: string) {
         this.databaseName = databaseName;
     }
 
     public async connect(
-        conectionOptions: DBConnectionOptions
+        connectionOptions: DBConnectionOptions
     ): Promise<void> {
         const {
             ca,
@@ -39,7 +37,7 @@ class DocumentDBWrapper {
             endpoint
         } = connectionOptions;
         const client : any = await mongodb.MongoClient.connect(
-`mongodb://${username}:${password}@${endpoint}:${port}/${databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
+`mongodb://${username}:${password}@${endpoint}:${port}/${this.databaseName}?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred`, 
             { 
                 sslValidate: true,
                 sslCA: ca,
@@ -60,7 +58,7 @@ class DocumentDBWrapper {
             );
         }
         try {
-            results = await 
+            results = await this.client
                 .db(this.databaseName)
                 .collection(collection)
                 .find(query)
@@ -70,6 +68,7 @@ class DocumentDBWrapper {
                 `Failed to issue query ${query} on collection ${collection}. error: ${ex} `
             );
         }
+        return results;
     }
 
     public async write(): Promise<boolean> {
