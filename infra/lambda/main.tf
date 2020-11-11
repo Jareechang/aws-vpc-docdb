@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "lambda_bucket" {
-    bucket  = "dev-lambda-test-01234"
+    bucket  = var.s3_bucket_name 
     acl     = "private"
 
     tags = {
@@ -9,8 +9,8 @@ resource "aws_s3_bucket" "lambda_bucket" {
 }
 
 locals {
-    package_json = jsondecode(file("./package.json"))
-    build_folder = "deploy"
+    package_json = jsondecode(file("../../package.json"))
+    build_folder = "../../deploy"
 }
 
 resource "aws_s3_bucket_object" "lambda_docdb_test" {
@@ -47,7 +47,7 @@ resource "aws_lambda_function" "docdb_lambda" {
     role = "${aws_iam_role.iam_for_lambda.arn}"
     timeout = 300
 
-    source_code_hash = "${filebase64sha256("deploy/main-${local.package_json.version}.zip")}"
+    source_code_hash = "${filebase64sha256("${local.build_folder}/main-${local.package_json.version}.zip")}"
 
     runtime = "nodejs12.x"
     depends_on = [
@@ -57,17 +57,17 @@ resource "aws_lambda_function" "docdb_lambda" {
     ]
     vpc_config {
         subnet_ids         = [
-            aws_subnet.db_1a.id,
-            aws_subnet.db_1b.id
+            var.db_subnet_1a_id,
+            var.db_subnet_1b_id
         ]
-        security_group_ids = [aws_default_security_group.custom_default.id]
+        security_group_ids = [var.default_sg_custom_id]
     }
 
     environment {
         variables = {
-            DB_ENDPOINT     = aws_docdb_cluster.default.endpoint
+            DB_ENDPOINT     = var.docdb_cluster_endpoint
             DB_USER         = var.docdb_cluster_username
-            DB_PASSWORD     = random_password.docdb_password.result
+            DB_PASSWORD     = var.docdb_cluster_password 
             DB_OPERATION    = "read" 
         }
     }

@@ -1,0 +1,5 @@
+vpc_id = "vpc-03406718f40fbd7d1"
+db_subnet_1a_id = "subnet-0f2cc35dd17d2f82c"
+db_subnet_1b_id = "subnet-0cbc36aafeb9307e0"
+docdb_cluster_username = "dev_user"
+docdb_cluster_identifer = "dev-docdb-cluster"

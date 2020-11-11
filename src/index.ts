@@ -36,10 +36,10 @@ exports.handler = async function(event: any, context: any) {
     let results = null;
     switch (operation) {
         case 'read':
-            await documentDBWrapper.read(collectionName, {});
+            results = await documentDBWrapper.read(collectionName, {});
             break;
         case 'write':
-            await documentDBWrapper.write();
+            results = await documentDBWrapper.write();
             break;
         default:
             console.log(
