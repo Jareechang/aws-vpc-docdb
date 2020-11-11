@@ -65,21 +65,32 @@ class DocumentDBWrapper {
                 .toArray();
         } catch (ex) {
             console.error(
-                `Failed to issue query ${query} on collection ${collection}. error: ${ex} `
+                `DocumentDBWrapper.find() -> Failed to issue query ${query} on collection ${collection}. error: ${ex} `
             );
         }
         return results;
     }
 
-    public async write(): Promise<boolean> {
+    public async insertOne(
+        data: any,
+    ): Promise<boolean> {
         let response = false
         if (!this.client) {
             throw new Error(
                 'this.client does not exist, please call connect() with the correct option'
             );
         }
-        console.log('write DB....');
-        return response;
+        try {
+            results = await this.client
+                .db(this.databaseName)
+                .collection(collection)
+                .insert(data);
+        } catch (ex) {
+            console.error(
+                `DocumentDBWrapper.insertOne() -> Failed to insert ${data} on collection ${collection}. error: ${ex} `
+            );
+        }
+        return !!results;
     }
 }
 

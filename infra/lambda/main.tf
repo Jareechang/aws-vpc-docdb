@@ -39,8 +39,8 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-resource "aws_lambda_function" "docdb_lambda" {
-    function_name = var.lambda_func_name
+resource "aws_lambda_function" "docdb_lambda_read" {
+    function_name = "${var.lambda_func_name}-read"
     s3_bucket = "${aws_s3_bucket.lambda_bucket.id}"
     s3_key = "${aws_s3_bucket_object.lambda_docdb_test.id}"
     handler = "dist/index.handler"
@@ -53,7 +53,7 @@ resource "aws_lambda_function" "docdb_lambda" {
     depends_on = [
         "aws_iam_role_policy_attachment.attach_lambda_role_logs",
         "aws_iam_role_policy_attachment.attach_lambda_role_eni",
-        "aws_cloudwatch_log_group.sample_log_group"
+        "aws_cloudwatch_log_group.sample_log_group_read"
     ]
     vpc_config {
         subnet_ids         = [
@@ -73,8 +73,47 @@ resource "aws_lambda_function" "docdb_lambda" {
     }
 }
 
-resource "aws_cloudwatch_log_group" "sample_log_group" {
-    name = "/aws/lambda/${var.lambda_func_name}"
+resource "aws_lambda_function" "docdb_lambda_insert" {
+    function_name = "${var.lambda_func_name}-insert"
+    s3_bucket = "${aws_s3_bucket.lambda_bucket.id}"
+    s3_key = "${aws_s3_bucket_object.lambda_docdb_test.id}"
+    handler = "dist/index.handler"
+    role = "${aws_iam_role.iam_for_lambda.arn}"
+    timeout = 300
+
+    source_code_hash = "${filebase64sha256("${local.build_folder}/main-${local.package_json.version}.zip")}"
+
+    runtime = "nodejs12.x"
+    depends_on = [
+        "aws_iam_role_policy_attachment.attach_lambda_role_logs",
+        "aws_iam_role_policy_attachment.attach_lambda_role_eni",
+        "aws_cloudwatch_log_group.sample_log_group_insert"
+    ]
+    vpc_config {
+        subnet_ids         = [
+            var.db_subnet_1a_id,
+            var.db_subnet_1b_id
+        ]
+        security_group_ids = [var.default_sg_custom_id]
+    }
+
+    environment {
+        variables = {
+            DB_ENDPOINT     = var.docdb_cluster_endpoint
+            DB_USER         = var.docdb_cluster_username
+            DB_PASSWORD     = var.docdb_cluster_password 
+            DB_OPERATION    = "insert" 
+        }
+    }
+}
+
+resource "aws_cloudwatch_log_group" "sample_log_group_read" {
+    name = "/aws/lambda/${var.lambda_func_name}-read"
+    retention_in_days = 1
+}
+
+resource "aws_cloudwatch_log_group" "sample_log_group_insert" {
+    name = "/aws/lambda/${var.lambda_func_name}-insert"
     retention_in_days = 1
 }
 

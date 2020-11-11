@@ -38,8 +38,13 @@ exports.handler = async function(event: any, context: any) {
         case 'read':
             results = await documentDBWrapper.read(collectionName, {});
             break;
-        case 'write':
-            results = await documentDBWrapper.write();
+        case 'insert':
+            const currentData = new Date();
+            results = await documentDBWrapper.insert({
+                data: {
+                    currentDate
+                }
+            });
             break;
         default:
             console.log(
