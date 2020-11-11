@@ -40,7 +40,7 @@ exports.handler = async function(event: any, context: any) {
             break;
         case 'insert':
             const currentDate = new Date();
-            results = await documentDBWrapper.insert(
+            results = await documentDBWrapper.insertOne(
                 collectionName,
                 {
                     data: {
