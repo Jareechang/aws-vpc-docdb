@@ -61,7 +61,7 @@ class DocumentDBWrapper {
             results = await this.client
                 .db(this.databaseName)
                 .collection(collection)
-                .find(query)
+                .findOne(query)
                 .toArray();
         } catch (ex) {
             console.error(

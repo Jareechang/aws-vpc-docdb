@@ -1,5 +1,5 @@
 setup-env.sh
-setup-dev.sh
+env.tfvars
 dist
 terraform.tfstate.backup
 *.tfstate

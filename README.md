@@ -38,9 +38,8 @@ setup a DocumentDB within the vpc and use lambda to load and manage csv file dat
 - Terraform (>= v0.12.24)
 
 
-**Setting up resources: (TODO)**
-
-
+for the setup we must create resources for vpc then use outputs from there to setup the database resources.
+Then finally, setup the lamba function with the database an vpc details.
 
 1. Add AWS secret and key to your environment (or use template below and fill in envs)
 
@@ -61,19 +60,78 @@ export AWS_DEFAULT_REGION=us-east-1
 export TF_VAR_local_ip_address=<your-ip-address>
 ```
 
-3. Run terraform 
+3. Run terraform (VPC, database and lambda)
 
+##### Create `env.tfvars` file
+
+Put file into `./infra/`
+
+```yml
+# VPC
+vpc_id = "<insert-here>"
+db_subnet_1a_id = "<insert-here>"
+db_subnet_1b_id = "<insert-here>"
+default_sg_custom_id = "<insert-here>"
+
+# DocDB
+docdb_cluster_identifer = "<insert-here>"
+docdb_cluster_endpoint = "<insert-here>"
+docdb_cluster_username = "<insert-here>"
+docdb_cluster_password = "<insert-here>"
+
+# Lambda
+s3_bucket_name = "<insert-here>"
 ```
+
+##### Setup vpc
+
+```sh
+cd ./infra/vpc
+
+terraform init
 
 # Run the plan, and if it looks good then proceed
 terraform plan
 
+# Run the execution of setting up resources
+terraform apply -auto-approve
+```
+1. Create a `ssh-key.pem` file and copy `ssh-key` output into a file (to be used when acccessing ec2)
+2. Put VPC details in `env.tfvars`
+
+##### Setup Database
+
+1. Run the terraform 
+
+```sh
+cd ./infra/database
+
+terraform init
+
+# Run the plan, and if it looks good then proceed
+terraform plan -var-file=../env.tfvars
 
 # Run the execution of setting up resources
-terrfaorm apply
+terraform apply -var-file=../env.tfvars -auto-approve
 ```
 
-Done.
+2. Copy database outputs into `env.tfvars` fiel
+
+##### Setup Lambda
+
+1. Run the terraform 
+
+```sh
+cd ./infra/lambda
+
+terraform init
+
+# Run the plan, and if it looks good then proceed
+terraform plan -var-file=../env.tfvars
+
+# Run the execution of setting up resources
+terraform apply -var-file=../env.tfvars -auto-approve
+```
 
 #### Accessing Bastion (public secure instance)
 
