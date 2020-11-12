@@ -115,7 +115,15 @@ terraform plan -var-file=../env.tfvars
 terraform apply -var-file=../env.tfvars -auto-approve
 ```
 
-2. Copy database outputs into `env.tfvars` fiel
+2. Copy database outputs into `env.tfvars` file
+
+3. Add `rds-combined-ca-bundle.pem` into `src`
+
+```
+wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+
+cp ./rds-combined-ca-bundle.pem ./src/
+```
 
 ##### Setup Lambda
 
